@@ -66,7 +66,7 @@ interface AbstractPurchaseProduct {
  */
 class StripePurchaseProduct implements AbstractPurchaseProduct {
 
-    constructor(private stripePaymentService: StripePaymentsService) {}
+    // constructor(private stripePaymentService: StripePaymentsService) {}
 
     public purchaseProduct(productId: string): string {
         // this.stripePaymentService.purchaseProduct(productId);
@@ -86,9 +86,6 @@ class PayPalPurchaseProduct implements AbstractPurchaseProduct {
  * the same concrete variant.
  */
 interface AbstractPurchaseSubscription {
-    /**
-     * Product B is able to do its own thing...
-     */
     purchaseSubscription(subscriptionId: string): string;
 
 }

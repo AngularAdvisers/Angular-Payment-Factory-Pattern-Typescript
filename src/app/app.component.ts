@@ -34,7 +34,7 @@ export class AppComponent {
     //     break;
     //   }
     // }
-
+    console.log ('Calling Purchase Product');
     paymentServiceProvider.purchaseProduct(ProductLifetimeIdConst);
 
   }

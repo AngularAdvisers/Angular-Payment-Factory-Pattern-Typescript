@@ -105,6 +105,10 @@
           }
         }
       }
-    }},
-  "defaultProject": "angular-payment-factory-pattern"
+    }
+  },
+  "defaultProject": "angular-payment-factory-pattern",
+  "cli": {
+    "analytics": false
+  }
 }

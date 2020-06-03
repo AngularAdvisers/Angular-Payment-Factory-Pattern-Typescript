@@ -7,10 +7,12 @@ export class StripePaymentsService {
 
   constructor() { }
 
-  purchaseProduct (productId: string) {
-    console.log ('Stripe Payments Purchased Product = ', productId)
+  purchaseProduct (productId: string) : boolean{
+    console.log ('Stripe Payments Purchased Product = ', productId);
+    return true;
   }
 
-  purchaseSubscription (subscriptionId: string) {
+  purchaseSubscription (subscriptionId: string) : boolean {
     console.log ('Stripe Payments Purchased Subscription = ', subscriptionId)
+    return true;
   }  }

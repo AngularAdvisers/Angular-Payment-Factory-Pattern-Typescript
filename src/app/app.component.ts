@@ -1,41 +1,31 @@
 import { Component } from "@angular/core";
-import {
-  PaymentServiceProvider,
-  StripePaymentServiceProvider,
-  PayPalPaymentServiceProvider,
-  ProductLifetimeIdConst,
-  MonthySubscriptionIdConst,
-  StripePaymentServiceProviderConst,
-  PaypalPaymentServiceProviderConst,
-} from "./models/payment-service-provider";
+import { StripePaymentsService } from './services/stripe-payments/stripe-payments.service';
+import { PaypalPaymentsService } from './services/paypal-payments/paypal-payments.service';
+import { PaymentsServiceProvider, PaypalPaymentsServiceProvider, StripePaymentsServiceProvider } from "./models/payment-service-provider";
+
 @Component({
   selector: "app-root",
   templateUrl: "./app.component.html",
   styleUrls: ["./app.component.scss"],
 })
 export class AppComponent {
+
+  constructor(private stripePaymentsService:StripePaymentsService,
+              private paypalPaymentsService:PaypalPaymentsService) {}
   title = "angular-payment-factory-pattern";
 
   purchaseProduct() {
-    let paymentServiceProvider: PaymentServiceProvider = new StripePaymentServiceProvider();
-
-    const actualPaymentServiceProvider: string = StripePaymentServiceProviderConst;
-
-    // switch (actualPaymentServiceProvider) {
-    //   case StripePaymentServiceProviderConst: {
-    //     paymentServiceProvider = new StripePaymentServiceProvider();
-    //     break;
-    //   }
-    //   case PaypalPaymentServiceProviderConst: {
-    //     paymentServiceProvider = new PayPalPaymentServiceProvider();
-    //     break;
-    //   }
-    //   default: {
-    //     break;
-    //   }
-    // }
-    console.log ('Calling Purchase Product');
-    paymentServiceProvider.purchaseProduct(ProductLifetimeIdConst);
+  
+    const stripePaymentsServiceProvider: PaymentsServiceProvider = new StripePaymentsServiceProvider();
+    const paypalPaymentsServiceProvider: PaymentsServiceProvider = new PaypalPaymentsServiceProvider();
+    const stripeProduct = stripePaymentsServiceProvider.createProduct();
+    const stripeSubscription = stripePaymentsServiceProvider.createSubscription();
+    const paypalProduct = paypalPaymentsServiceProvider.createProduct();
+    const paypalSubscription = paypalPaymentsServiceProvider.createSubscription();
+    stripeProduct.purchaseProduct(this.stripePaymentsService, 'Lifetime');
+    stripeSubscription.purchaseSubscription(this.stripePaymentsService, 'monthly');
+    paypalProduct.purchaseProduct(this.paypalPaymentsService, 'Lifetime');
+    paypalSubscription.purchaseSubscription(this.paypalPaymentsService, 'monthly');
 
   }
 }

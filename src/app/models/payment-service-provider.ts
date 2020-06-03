@@ -2,26 +2,16 @@ import { StripePaymentsService } from '../services/stripe-payments/stripe-paymen
 import { PaypalPaymentsService } from '../services/paypal-payments/paypal-payments.service';
 
 /**
- * Constance
- */
-export const PaypalPaymentServiceProviderConst: string = "PayPal";
-export const StripePaymentServiceProviderConst: string = "Stripe";
-export const ProductLifetimeIdConst = 'Lifetime';
-export const MonthySubscriptionIdConst = 'monthy';
-export const YearlySubscritionIdConst = 'yearly';
-
-/**
- * The PaymentServiceProvider Factory interface declares a set of methods that return
+ * The PaymentsServiceProvider Factory interface declares a set of methods that return
  * different abstract products. These products are called a family and are
  * related by a high-level theme or concept. Products of one family are usually
  * able to collaborate among themselves. A family of products may have several
  * variants, but the products of one variant are incompatible with products of
  * another.
  */
-export interface PaymentServiceProvider {
-    purchaseProduct(productId: string): AbstractPurchaseProduct;
-
-    purchaseSubscription(subscriptionId: string): AbstractPurchaseSubscription;
+export interface PaymentsServiceProvider {
+    createProduct(): AbstractProduct;
+    createSubscription(): AbstractSubscription;
 }
 
 /**
@@ -30,26 +20,26 @@ export interface PaymentServiceProvider {
  * that signatures of the Concrete Factory's methods return an abstract product,
  * while inside the method a concrete product is instantiated.
  */
-export class StripePaymentServiceProvider implements PaymentServiceProvider {
-    public purchaseProduct(): AbstractPurchaseProduct {
-        return new StripePurchaseProduct( new StripePaymentsService() );
+export class StripePaymentsServiceProvider implements PaymentsServiceProvider {
+    public createProduct(): AbstractProduct {
+        return new ConcreteStripeProduct();
     }
 
-    public purchaseSubscription(): AbstractPurchaseSubscription {
-        return new StripePurchaseSubscription( new StripePaymentsService());
+    public createSubscription(): AbstractSubscription {
+        return new ConcreteStripeSubscription();
     }
 }
 
 /**
  * Each Concrete Factory has a corresponding product variant.
  */
-export class PayPalPaymentServiceProvider implements PaymentServiceProvider {
-    public purchaseProduct(): AbstractPurchaseProduct {
-        return new PayPalPurchaseProduct(new PaypalPaymentsService());
+export class PaypalPaymentsServiceProvider implements PaymentsServiceProvider {
+    public createProduct(): AbstractProduct {
+        return new ConcretePaypalProduct();
     }
 
-    public purchaseSubscription(): AbstractPurchaseSubscription {
-        return new PayPalPurchaseSubscription(new PaypalPaymentsService());
+    public createSubscription(): AbstractSubscription {
+        return new ConcretePaypalSubscription();
     }
 }
 
@@ -57,31 +47,24 @@ export class PayPalPaymentServiceProvider implements PaymentServiceProvider {
  * Each distinct product of a product family should have a base interface. All
  * variants of the product must implement this interface.
  */
-interface AbstractPurchaseProduct {
-    
-    purchaseProduct(productId: string): string;
+interface AbstractProduct {
+    purchaseProduct(paymentService:any, productId: string): boolean;
 }
 
 /**
  * These Concrete Products are created by corresponding Concrete Factories.
  */
-class StripePurchaseProduct implements AbstractPurchaseProduct {
-
-    constructor(private stripePaymentService: StripePaymentsService) {}
-
-    public purchaseProduct(productId: string): string {
-        this.stripePaymentService.purchaseProduct(productId);
-        return 'The result of the product A1.';
+class ConcreteStripeProduct implements AbstractProduct {
+    public purchaseProduct(paymentService:StripePaymentsService, productId: string): boolean {
+        const returnValue: boolean = paymentService.purchaseProduct(productId);
+        return returnValue;
     }
 }
 
-class PayPalPurchaseProduct implements AbstractPurchaseProduct {
-
-    constructor(private paypalPaymentService: PaypalPaymentsService) {}
-
-    public purchaseProduct(productId: string): string {
-        this.paypalPaymentService.purchaseProduct(productId);
-        return 'The result of the product A2.';
+class ConcretePaypalProduct implements AbstractProduct {
+    public purchaseProduct(paymentService:PaypalPaymentsService, productId: string): boolean {
+        const returnValue: boolean = paymentService.purchaseProduct(productId);
+        return returnValue;
     }
 }
 
@@ -90,32 +73,27 @@ class PayPalPurchaseProduct implements AbstractPurchaseProduct {
  * with each other, but proper interaction is possible only between products of
  * the same concrete variant.
  */
-interface AbstractPurchaseSubscription {
-    purchaseSubscription(subscriptionId: string): string;
-
+interface AbstractSubscription {
+    purchaseSubscription(paymentService:any, subscriptionId: string): boolean;
 }
 
 /**
  * These Concrete Products are created by corresponding Concrete Factories.
  */
-class StripePurchaseSubscription implements AbstractPurchaseSubscription {
+class ConcreteStripeSubscription implements AbstractSubscription {
 
-    constructor(private stripePaymentService: StripePaymentsService) {}
-
-    public purchaseSubscription(subscriptionId: string): string {
-        this.stripePaymentService.purchaseSubscription(subscriptionId);
-        return 'The result of the product B1.';
+    public purchaseSubscription(paymentService:StripePaymentsService, subscriptionId: string): boolean {
+        const returnValue: boolean = paymentService.purchaseSubscription(subscriptionId);
+        return returnValue;
     }
 
 }
 
-class PayPalPurchaseSubscription implements AbstractPurchaseSubscription {
+class ConcretePaypalSubscription implements AbstractSubscription {
 
-    constructor(private paypalPaymentService: PaypalPaymentsService) {}
-
-    public purchaseSubscription(subscriptionId: string): string {
-        this.paypalPaymentService.purchaseSubscription(subscriptionId);
-        return 'The result of the product B2.';
+    public purchaseSubscription(paymentService:StripePaymentsService, subscriptionId: string): boolean {
+        const returnValue: boolean = paymentService.purchaseSubscription(subscriptionId);
+        return returnValue;
     }
 
 }

@@ -5,10 +5,10 @@ import {
   PaymentServiceProvider,
   StripePaymentServiceProvider,
   PayPalPaymentServiceProvider,
-  productLifetimeId,
-  monthySubscriptionId,
-  stripePaymentServiceProvider,
-  paypalPaymentServiceProvider,
+  ProductLifetimeIdConst,
+  MonthySubscriptionIdConst,
+  StripePaymentServiceProviderConst,
+  PaypalPaymentServiceProviderConst,
 } from "./models/payment-service-provider";
 
 describe("AppComponent", () => {
@@ -43,16 +43,16 @@ describe("AppComponent", () => {
   it("should create Payment Service Provider", () => {
     let paymentServiceProvider: PaymentServiceProvider = new StripePaymentServiceProvider();
 
-    const actualPaymentServiceProvider: string = stripePaymentServiceProvider;
+    const actualPaymentServiceProvider: string = StripePaymentServiceProviderConst;
 
     const fixture = TestBed.createComponent(AppComponent);
 
     switch (actualPaymentServiceProvider) {
-      case stripePaymentServiceProvider: {
+      case StripePaymentServiceProviderConst: {
         paymentServiceProvider = new StripePaymentServiceProvider();
         break;
       }
-      case paypalPaymentServiceProvider: {
+      case PaypalPaymentServiceProviderConst: {
         paymentServiceProvider = new PayPalPaymentServiceProvider();
         break;
       }
@@ -63,8 +63,8 @@ describe("AppComponent", () => {
 
 
 
-    const productId = productLifetimeId;
-    const subsciptionId =  monthySubscriptionId;
+    const productId = ProductLifetimeIdConst;
+    const subsciptionId =  MonthySubscriptionIdConst;
 
     const product = paymentServiceProvider.purchaseProduct(productId);
     const subscription = paymentServiceProvider.purchaseSubscription(subsciptionId);

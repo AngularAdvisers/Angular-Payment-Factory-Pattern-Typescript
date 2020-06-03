@@ -537,6 +537,12 @@ ng generate interface models/payment-service-provider
 ng generate service services/stripe-payments/stripe-payments
 ```
 
+### Create PayPal service
+
+```
+ng generate service services/paypal-payments/paypal-payments
+```
+
 ## Build
 
 Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.

@@ -1,13 +1,14 @@
 import { StripePaymentsService } from '../services/stripe-payments/stripe-payments.service';
+import { PaypalPaymentsService } from '../services/paypal-payments/paypal-payments.service';
 
 /**
  * Constance
  */
-export const paypalPaymentServiceProvider: string = "PayPal";
-export const stripePaymentServiceProvider: string = "Stripe";
-export const productLifetimeId = 'Lifetime';
-export const monthySubscriptionId = 'monthy';
-export const yearlySubscritionId = 'yearly';
+export const PaypalPaymentServiceProviderConst: string = "PayPal";
+export const StripePaymentServiceProviderConst: string = "Stripe";
+export const ProductLifetimeIdConst = 'Lifetime';
+export const MonthySubscriptionIdConst = 'monthy';
+export const YearlySubscritionIdConst = 'yearly';
 
 /**
  * The PaymentServiceProvider Factory interface declares a set of methods that return
@@ -31,11 +32,11 @@ export interface PaymentServiceProvider {
  */
 export class StripePaymentServiceProvider implements PaymentServiceProvider {
     public purchaseProduct(): AbstractPurchaseProduct {
-        return new StripePurchaseProduct();
+        return new StripePurchaseProduct( new StripePaymentsService() );
     }
 
     public purchaseSubscription(): AbstractPurchaseSubscription {
-        return new StripePurchaseSubscription();
+        return new StripePurchaseSubscription( new StripePaymentsService());
     }
 }
 
@@ -44,11 +45,11 @@ export class StripePaymentServiceProvider implements PaymentServiceProvider {
  */
 export class PayPalPaymentServiceProvider implements PaymentServiceProvider {
     public purchaseProduct(): AbstractPurchaseProduct {
-        return new PayPalPurchaseProduct();
+        return new PayPalPurchaseProduct(new PaypalPaymentsService());
     }
 
     public purchaseSubscription(): AbstractPurchaseSubscription {
-        return new PayPalPurchaseSubscription();
+        return new PayPalPurchaseSubscription(new PaypalPaymentsService());
     }
 }
 
@@ -66,16 +67,20 @@ interface AbstractPurchaseProduct {
  */
 class StripePurchaseProduct implements AbstractPurchaseProduct {
 
-    // constructor(private stripePaymentService: StripePaymentsService) {}
+    constructor(private stripePaymentService: StripePaymentsService) {}
 
     public purchaseProduct(productId: string): string {
-        // this.stripePaymentService.purchaseProduct(productId);
+        this.stripePaymentService.purchaseProduct(productId);
         return 'The result of the product A1.';
     }
 }
 
 class PayPalPurchaseProduct implements AbstractPurchaseProduct {
+
+    constructor(private paypalPaymentService: PaypalPaymentsService) {}
+
     public purchaseProduct(productId: string): string {
+        this.paypalPaymentService.purchaseProduct(productId);
         return 'The result of the product A2.';
     }
 }
@@ -95,8 +100,10 @@ interface AbstractPurchaseSubscription {
  */
 class StripePurchaseSubscription implements AbstractPurchaseSubscription {
 
+    constructor(private stripePaymentService: StripePaymentsService) {}
+
     public purchaseSubscription(subscriptionId: string): string {
-        
+        this.stripePaymentService.purchaseSubscription(subscriptionId);
         return 'The result of the product B1.';
     }
 
@@ -104,7 +111,10 @@ class StripePurchaseSubscription implements AbstractPurchaseSubscription {
 
 class PayPalPurchaseSubscription implements AbstractPurchaseSubscription {
 
+    constructor(private paypalPaymentService: PaypalPaymentsService) {}
+
     public purchaseSubscription(subscriptionId: string): string {
+        this.paypalPaymentService.purchaseSubscription(subscriptionId);
         return 'The result of the product B2.';
     }
 
